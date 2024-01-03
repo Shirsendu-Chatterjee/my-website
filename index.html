@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="whatsapp image.png" type="image/x-icon">
+    <link rel="stylesheet" href="index.css">
+
+
+    <title>Form</title>
+</head>
+
+<body>
+    <form action="post">
+
+        <h2 class="center">Login</h2>
+        <label for="name">
+            NAME
+        </label>
+        <input type="text" id="name" placeholder="Enter your name">
+
+
+        <label for="city">
+            CITY
+        </label>
+        <select id="city">
+            <option value="delhi">Delhi</option>
+            <option value="agra">agra</option>
+            <option value="jharkhand">jharkhand</option>
+            <option value="jaipur">jaipur</option>
+            </select><br>
+
+
+
+
+        <label for="pin">
+            PIN
+        </label>
+        <input type="password" id="pin">
+
+        <button type ="button" onclick="log()">submit</button>
+    </form>
+
+    <!-- <div>
+        <form action="/submit">
+            <textarea name="comment" rows="4" cols="50" placeholder="Enter your comment here..."></textarea>
+            <select name="fruits">
+              <option value="apple">Apple</option>
+              <option value="banana">Banana</option>
+              <option value="cherry">Cherry</option>
+            </select>
+            <input type="submit" value="Submit">
+      </form>
+    </div> -->
+    <script>
+        function log() {
+            var usr=document.getElementById('name').value;
+            var pass=document.getElementById('pin').value;
+
+            var validusr='qwe';
+            var validpass='123';
+            alert("fuck you")
+
+            if (usr===validusr && pass===validpass){ 
+                window.location.href="page.html";
+            }else {
+                alert('Invalid username or password. Please try again.');
+            }
+
+            
+        }
+    </script>
+    
+</body>
+
+</html>

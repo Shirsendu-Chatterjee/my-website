@@ -1,0 +1,40 @@
+
+:root{
+    --bgc: rgb(7, 2, 14);
+    --fgc: #b477c5;;
+}
+
+.navbar{
+    list-style-type: none;
+    /* float: left; */
+    background-color: var(--bgc);
+    
+    padding: 0px;
+    margin:0px;
+    border-radius:7px;
+    
+
+
+    /* background-color: red; */
+
+}
+li{display:inline-flex;
+    padding:6px;
+    margin:10px;
+    color: var(--fgc);
+    text-decoration: none;
+}
+.search{
+    display: inline-flex;
+    float: right;
+    color: var(--fgc);
+    margin: 14px;
+}
+button{background-color: var(--bgc);
+    border:var(--fgc);
+    color:var(--fgc); 
+}
+
+a :hover{
+    background-color: blue;
+}
