@@ -1,77 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="whatsapp image.png" type="image/x-icon">
-    <link rel="stylesheet" href="index.css">
-
-
-    <title>Form</title>
+  <meta charset="UTF-8" />
+  <title>RAG Chat Demo</title>
+  <style>
+    #chat-box {
+      width: 400px;
+      height: 300px;
+      border: 1px solid #ccc;
+      overflow-y: auto;
+      padding: 8px;
+      margin-bottom: 8px;
+      background: #f9f9f9;
+    }
+    #knowledge, #user-input {
+      width: 400px;
+      padding: 6px;
+      margin-bottom: 6px;
+    }
+    #status {
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+  </style>
 </head>
-
 <body>
-    <form action="post">
+  <div id="status">Checking backend...</div>
+  <h2>RAG Chatbot Demo</h2>
+  <textarea id="knowledge" placeholder="Paste knowledge here..." rows="4"></textarea><br />
+  <button onclick="uploadText()">Upload Knowledge</button>
+  <div id="chat-box"></div>
+  <input id="user-input" placeholder="Ask a question..." />
+  <button onclick="sendMessage()">Send</button>
+  <script>
+    const backendUrl = "https://huggingface.co/spaces/S-Chatterjee2005/stratamind";  
 
-        <h2 class="center">Login</h2>
-        <label for="name">
-            NAME
-        </label>
-        <input type="text" id="name" placeholder="Enter your name">
-
-
-        <label for="city">
-            CITY
-        </label>
-        <select id="city">
-            <option value="delhi">Delhi</option>
-            <option value="agra">agra</option>
-            <option value="jharkhand">jharkhand</option>
-            <option value="jaipur">jaipur</option>
-            </select><br>
-
-
-
-
-        <label for="pin">
-            PIN
-        </label>
-        <input type="password" id="pin">
-
-        <button type ="button" onclick="log()">submit</button>
-    </form>
-
-    <!-- <div>
-        <form action="/submit">
-            <textarea name="comment" rows="4" cols="50" placeholder="Enter your comment here..."></textarea>
-            <select name="fruits">
-              <option value="apple">Apple</option>
-              <option value="banana">Banana</option>
-              <option value="cherry">Cherry</option>
-            </select>
-            <input type="submit" value="Submit">
-      </form>
-    </div> -->
-    <script>
-        function log() {
-            var usr=document.getElementById('name').value;
-            var pass=document.getElementById('pin').value;
-
-            var validusr='qwe';
-            var validpass='123';
-            alert("Hello everyone <3 ")
-
-            if (usr===validusr && pass===validpass){ 
-                window.location.href="page.html";
-            }else {
-                alert('Invalid username or password. Please try again.');
-            }
-
-            
+    async function checkBackend() {
+      try {
+        const res = await fetch(`${backendUrl}/health`);
+        if (res.ok) {
+          document.getElementById("status").innerText = "✅ Backend Connected";
+          document.getElementById("status").style.color = "green";
+        } else {
+          document.getElementById("status").innerText = "⚠ Backend Not Responding";
+          document.getElementById("status").style.color = "red";
         }
-    </script>
-    
-</body>
+      } catch (err) {
+        document.getElementById("status").innerText = "❌ Cannot reach Backend";
+        document.getElementById("status").style.color = "red";
+      }
+    }
 
+    async function uploadText() {
+      const text = document.getElementById("knowledge").value;
+      if (!text.trim()) return;
+      const blob = new Blob([text], { type: "text/plain" });
+      const formData = new FormData();
+      formData.append("file", blob, "knowledge.txt");
+      try {
+        const res = await fetch(`${backendUrl}/upload_text/`, {
+          method: "POST",
+          body: formData
+        });
+        const data = await res.json();
+        document.getElementById("chat-box").innerHTML += `<div><em>${data.message}</em></div>`;
+        document.getElementById("knowledge").value = "";
+      } catch (err) {
+        document.getElementById("chat-box").innerHTML += `<div><em>❌ Upload failed</em></div>`;
+      }
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById("user-input");
+  const query = input.value.trim();
+  if (!query) return;
+
+  const chatBox = document.getElementById("chat-box");
+  chatBox.innerHTML += `<div><b>You:</b> ${query}</div>`;
+  input.value = "";
+
+  const formData = new FormData();
+  formData.append("question", query);
+
+  const res = await fetch(`${backendUrl}/ask/`, {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+  chatBox.innerHTML += `<div><b>AI:</b> ${data.answer}</div>`;
+  chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    checkBackend();
+  </script>
+</body>
 </html>
